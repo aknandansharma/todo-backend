@@ -4,6 +4,7 @@ import colors from "colors";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoute.js"
+import noteRoute from "./routes/noteRoute.js"
 
 // .env configure.
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', userRoutes)
+app.use('/api/v1/auth', noteRoute)
 
 // rest api check on the web.
 app.get("/", (req, res) => {
