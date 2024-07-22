@@ -209,14 +209,14 @@ export const updateNoteStatus = async (req, res) => {
             return res.status(404).json({ error: true, message: "Note not found." });
         }
 
-        // Check the status transition
-        if (
-            (note.status === 'Todo' && status !== 'InProgress') ||
-            (note.status === 'InProgress' && status !== 'Done') ||
-            (note.status === 'Done')
-        ) {
-            return res.status(400).json({ error: true, message: "Invalid status transition." });
-        }
+        // // Check the status transition
+        // if (
+        //     (note.status === 'Todo' && status !== 'InProgress') ||
+        //     (note.status === 'InProgress' && status !== 'Done') ||
+        //     (note.status === 'Done')
+        // ) {
+        //     return res.status(400).json({ error: true, message: "Invalid status transition." });
+        // }
 
         note.status = status;
         await note.save();
