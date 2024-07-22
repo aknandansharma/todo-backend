@@ -192,3 +192,50 @@ export const getUser = async (req, res) => {
 
 
 
+// Update note status
+export const updateNoteStatus = async (req, res) => {
+    try {
+        const noteId = req.params.noteId;
+        const { status } = req.body;
+        const { user } = req.user;
+
+        // Check if the status is provided and is valid
+        if (!status || !['Todo', 'InProgress', 'Done'].includes(status)) {
+            return res.status(400).json({ error: true, message: "Invalid status provided." });
+        }
+
+        const note = await Note.findOne({ _id: noteId, userId: user._id });
+        if (!note) {
+            return res.status(404).json({ error: true, message: "Note not found." });
+        }
+
+        // Check the status transition
+        if (
+            (note.status === 'Todo' && status !== 'InProgress') ||
+            (note.status === 'InProgress' && status !== 'Done') ||
+            (note.status === 'Done')
+        ) {
+            return res.status(400).json({ error: true, message: "Invalid status transition." });
+        }
+
+        note.status = status;
+        await note.save();
+
+        return res.json({
+            error: false,
+            note,
+            message: "Note status updated successfully!"
+        });
+
+    } catch (error) {
+        console.log("Error in updateNoteStatus:", error);
+        res.status(500).send({
+            error: true,
+            message: "Error in updating note status.",
+            details: error.message
+        });
+    }
+};
+
+
+
